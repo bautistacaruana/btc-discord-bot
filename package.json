@@ -1,15 +1,12 @@
-
 {
-  "name": "btc-discord-bot",
+  "name": "eth-discord-bot",
   "version": "1.0.0",
-  "description": "Bot de Discord para mostrar el precio de BTC",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "discord.js": "^14.13.0",
-    "dotenv": "^16.4.5",
-    "node-fetch": "^2.6.12"
+    "axios": "^1.6.8",
+    "discord.js": "^14.14.1"
   }
 }
