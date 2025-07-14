@@ -1,28 +1,26 @@
-
-const { Client, GatewayIntentBits } = require('discord.js');
-const fetch = require('node-fetch');
-require('dotenv').config();
+const { Client, GatewayIntentBits } = require("discord.js");
+const axios = require("axios");
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
+  intents: [GatewayIntentBits.Guilds],
 });
 
-client.once('ready', () => {
-  console.log(`Bot activo como ${client.user.tag}`);
+client.once("ready", () => {
+  console.log(`Conectado como ${client.user.tag}`);
 });
 
-client.on('messageCreate', async message => {
-  if (message.content === '!btc') {
-    try {
-      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-      const data = await res.json();
-      const price = data.bitcoin.usd;
-      message.channel.send(`🟠 El precio actual de BTC es: $${price}`);
-    } catch (err) {
-      console.error(err);
-      message.channel.send('Error al obtener el precio de BTC.');
-    }
+setInterval(async () => {
+  try {
+    const res = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
+    const btcPrice = res.data.bitcoin.usd.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+
+    await client.user.setActivity(`BTC: ${btcPrice}`, { type: 3 }); // type 3 = Watching
+  } catch (err) {
+    console.error("Error al obtener el precio:", err);
   }
-});
+}, 60 * 1000); // cada 60 segundos
 
-client.login(process.env.TOKEN);
+client.login(process.env.DISCORD_TOKEN);
